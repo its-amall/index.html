@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rose Day Surprise 🌹</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+/* Animated romantic gradient */
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(-45deg,#ff4e7a,#ff758c,#ff7eb3,#ffc2d1);
+  background-size:400% 400%;
+  animation:gradientMove 12s ease infinite;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  color:white;
+}
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* Card */
+.screen{
+  display:none;
+  text-align:center;
+  max-width:380px;
+  padding:25px;
+  background:rgba(255,255,255,0.18);
+  border-radius:20px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 25px rgba(255,50,120,0.35);
+  animation:fadeIn .8s ease;
+}
+
+.active{display:block}
+
+button{
+  padding:10px 22px;
+  border:none;
+  border-radius:25px;
+  font-size:15px;
+  cursor:pointer;
+  margin:8px;
+}
+
+.primary{background:#ff2e63;color:white}
+.secondary{background:white;color:#ff2e63}
+
+/* Gifts */
+.gifts{display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.gift{
+  background:rgba(255,255,255,0.3);
+  padding:15px;
+  border-radius:15px;
+  cursor:pointer;
+  font-size:24px;
+  transition:.3s;
+}
+.gift:hover{
+  transform:scale(1.2);
+  box-shadow:0 0 15px #ff2e63;
+}
+
+/* Floating petals/hearts */
+.float{
+  position:fixed;
+  top:-20px;
+  font-size:22px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* Typing */
+#typed{min-height:80px}
+
+/* Countdown */
+#count{font-size:18px;margin-top:10px}
+
+/* Music Button */
+#musicBtn{
+  position:fixed;
+  top:15px;
+  right:15px;
+  background:#ff2e63;
+  border-radius:50%;
+  width:45px;
+  height:45px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+}
+
+/* Fireworks */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8a1a3f2f3.mp3">
+</audio>
+
+<button id="musicBtn" onclick="toggleMusic()">🎵</button>
+
+<!-- Screens -->
+<div class="screen active" id="s1">
+  <h2>🌹 Rose Day Surprise 🌹</h2>
+  <p>Tap to begin</p>
+  <button class="primary" onclick="start()">Start</button>
+</div>
+
+<div class="screen" id="s2">
+  <h2>Question 😊</h2>
+  <p>Do you like surprises?</p>
+  <button class="primary" onclick="next(3)">Yes</button>
+  <button class="secondary" onclick="moveBtn(this)">No</button>
+</div>
+
+<div class="screen" id="s3">
+  <h2>🌹 Accept this rose?</h2>
+  <button class="primary" onclick="next(4)">Accept</button>
+</div>
+
+<div class="screen" id="s4">
+  <h2>Open your gifts 🎁</h2>
+  <div class="gifts">
+    <div class="gift" onclick="gift('🌹 A rose filled with care!')">🌹</div>
+    <div class="gift" onclick="gift('🍫 Chocolates for sweet smiles!')">🍫</div>
+    <div class="gift" onclick="gift('💍 A promise of kindness & joy!')">💍</div>
+    <div class="gift" onclick="gift('🎶 A melody of happy memories!')">🎶</div>
+  </div>
+  <button class="primary" onclick="next(5)">Continue</button>
+</div>
+
+<div class="screen" id="s5">
+  <h2 id="typed"></h2>
+  <div id="count"></div>
+</div>
+
+<script>
+
+/* Navigation */
+function next(n){
+ document.querySelectorAll(".screen")
+ .forEach(s=>s.classList.remove("active"));
+ document.getElementById("s"+n).classList.add("active");
+}
+
+/* Start */
+function start(){
+ document.getElementById("music").play();
+ next(2);
+ spawn();
+}
+
+/* Music toggle */
+function toggleMusic(){
+ const m=document.getElementById("music");
+ if(m.paused){m.play()}else{m.pause()}
+}
+
+/* Moving NO */
+function moveBtn(btn){
+ btn.style.position="absolute";
+ btn.style.top=Math.random()*80+"%";
+ btn.style.left=Math.random()*80+"%";
+}
+
+/* Gift */
+function gift(msg){alert(msg)}
+
+/* Falling roses/hearts */
+function spawn(){
+ setInterval(()=>{
+   const el=document.createElement("div");
+   el.className="float";
+   el.innerText=Math.random()>0.5?"🌹":"💖";
+   el.style.left=Math.random()*100+"vw";
+   el.style.animationDuration=(Math.random()*3+4)+"s";
+   document.body.appendChild(el);
+   setTimeout(()=>el.remove(),7000);
+ },300);
+}
+
+/* Typing */
+const text="Theerthuu 🌸\nHappy Rose Day 🌹\nThis little surprise is just for you — because you make life brighter ✨";
+let i=0;
+function type(){
+ if(i<text.length){
+   document.getElementById("typed").innerHTML+=text.charAt(i);
+   i++;
+   setTimeout(type,40);
+ }
+}
+setTimeout(type,5000);
+
+/* Countdown */
+const target=new Date();
+target.setDate(target.getDate()+1);
+setInterval(()=>{
+ const diff=target-new Date();
+ const h=Math.floor(diff/1000/60/60);
+ const m=Math.floor(diff/1000/60)%60;
+ const s=Math.floor(diff/1000)%60;
+ document.getElementById("count").innerText=
+ "Next surprise in: "+h+"h "+m+"m "+s+"s";
+},1000);
+
+/* Fireworks */
+const c=document.getElementById("fireworks");
+const ctx=c.getContext("2d");
+c.width=innerWidth;
+c.height=innerHeight;
+
+setInterval(()=>{
+ const x=Math.random()*c.width;
+ const y=Math.random()*c.height/2;
+ for(let i=0;i<40;i++){
+   ctx.fillStyle="white";
+   ctx.fillRect(x+Math.random()*60,y+Math.random()*60,2,2);
+ }
+},700);
+
+</script>
+
+</body>
+</html>
